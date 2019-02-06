@@ -1,0 +1,23 @@
+{
+  "plugins": [
+    ["transform-class-properties"],
+    ["transform-es2015-spread"],
+    ["syntax-object-rest-spread"],
+    [
+      "module-resolver",
+      {
+        "root": ["./"],
+        "alias": {
+          "@consts": "./consts",
+          "@utils": "./utils",
+          "@routes": "./routes",
+          "@middlewares": "./middlewares",
+          "@models": "./models",
+          "@root": "./"
+        },
+        "extensions": [".js", ".json", ""]
+      }
+    ]
+  ],
+  "presets": ["@babel/preset-env"]
+}

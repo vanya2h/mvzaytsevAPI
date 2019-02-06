@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "es6",
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
+    "paths": {
+      "@routes/*": ["./routes/*"],
+      "@consts/*": ["./consts/*"],
+      "@middlewares/*": ["./middlewares/*"],
+      "@utils/*": ["./utils/*"],
+      "@models/*": ["./models/*"],
+      "@root/*": ["./*"]
+    }
+  },
+  "exclude": ["node_modules", ".git"]
+}
