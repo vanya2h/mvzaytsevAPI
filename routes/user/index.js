@@ -3,13 +3,16 @@ import { checkSchema } from "express-validator/check";
 import { createError } from "@utils/createError";
 import { resolveEntityId } from "@utils/resolveEntityId";
 import { auth } from "@middlewares/auth";
+import { makeSecret } from "@utils/makeSecret";
 import { createToken } from "@utils/createToken";
 import { hashWithSecret } from "@utils/hashWithSecret";
 import { handleValidation } from "@middlewares/handleValidation";
-import { verifySomethingWithHashed } from "@utils/verifySomethingWithHashed";
 import { User } from "@models/User";
-import { signinValidation } from "./signinValidation";
-import { signupValidation } from "./signupValidation";
+import { verifySomethingWithHashed } from "@utils/index";
+import { signinValidation } from "./validations/signinValidation";
+import { signupValidation } from "./validations/signupValidation";
+import { mayUserResend } from "./middlewares/mayUserResend";
+import { sendConfirmationEmail } from "./utils/sendConfirmationEmail";
 
 const router = express.Router();
 
@@ -17,38 +20,22 @@ router.post(
   "/signin",
   [checkSchema(signinValidation), handleValidation],
   async (req, res, next) => {
-    const { login, password } = req.matchedData;
-
-    const criteria = {
-      login
-    };
-
     try {
-      const user = await User.findOne(criteria, "+password");
+      const email = req.matchedData.email;
 
-      if (!user) {
-        return next(createError("Не удалось найти пользователя в бд"));
-      }
-
-      const isVerified = await verifySomethingWithHashed(password, user.password);
-
-      if (!isVerified) {
-        return next(createError("Неверный логин или пароль"));
-      }
-
-      const userId = resolveEntityId(user);
-      const populatedUser = await User.findById(userId);
+      const user = await User.findOne({
+        email
+      });
 
       const token = await createToken({
-        userId
+        userId: resolveEntityId(user)
       });
 
       return res.json({
         token,
-        user: populatedUser
+        user
       });
     } catch (reason) {
-      console.error("Ошибка", reason);
       return next(
         createError("В данный момент невозможно совершить авторизацию. Попробуйте позже", reason)
       );
@@ -56,38 +43,39 @@ router.post(
   }
 );
 
-if (process.env.NODE_ENV === "development") {
-  router.post(
-    "/signup",
-    [checkSchema(signupValidation), handleValidation],
-    async (req, res, next) => {
-      const { matchedData } = req;
+router.post(
+  "/signup",
+  [checkSchema(signupValidation), handleValidation],
+  async (req, res, next) => {
+    try {
+      const hashedPassword = await hashWithSecret(req.matchedData.password);
 
-      try {
-        const hashedPassword = await hashWithSecret(matchedData.password);
+      const emailSecret = await makeSecret(6);
+      const hashedEmailSecret = await hashWithSecret(emailSecret);
 
-        const createdUser = await User.create({
-          ...matchedData,
-          password: hashedPassword
-        });
+      const createdUser = await User.create({
+        ...req.matchedData,
+        password: hashedPassword,
+        emailSecret: hashedEmailSecret
+      });
 
-        const token = await createToken({
-          userId: resolveEntityId(createdUser)
-        });
+      const updatedUser = await sendConfirmationEmail(resolveEntityId(createdUser));
 
-        return res.json({
-          token,
-          user: createdUser
-        });
-      } catch (reason) {
-        console.error("Ошибка", reason);
-        return next(
-          createError("В данный момент невозможно совершить авторизацию. Попробуйте позже", reason)
-        );
-      }
+      const token = await createToken({
+        userId: resolveEntityId(updatedUser)
+      });
+
+      return res.json({
+        token,
+        user: updatedUser
+      });
+    } catch (error) {
+      return next(
+        createError("В данный момент невозможно совершить регистрацию. Попробуйте позже", error)
+      );
     }
-  );
-}
+  }
+);
 
 router.get("/auth", [auth()], async (req, res, next) => {
   try {
@@ -99,8 +87,103 @@ router.get("/auth", [auth()], async (req, res, next) => {
 
     return res.json(user);
   } catch (error) {
-    console.error("Ошибка", error);
     return next(createError("Не удается провести авторизацию. Обратитесь в тех. поддержку", error));
+  }
+});
+
+router.get("/resend", mayUserResend, async (req, res, next) => {
+  try {
+    const email = req.query.email;
+
+    if (!email) {
+      return next(createError("E-mail адрес не указан"));
+    }
+
+    const user = await User.findOne({
+      email: req.query.email
+    });
+
+    if (!user) {
+      return next(createError("Пользователь не найден в бд"));
+    }
+
+    const updatedUser = await sendConfirmationEmail(resolveEntityId(user));
+
+    return res.json(updatedUser);
+  } catch (error) {
+    console.log(error);
+    return next(createError("Не удалось переслать E-mail"));
+  }
+});
+
+router.post("/confirm", async (req, res, next) => {
+  const { userId, secret } = req.body;
+
+  try {
+    if (!userId || !secret) {
+      return next(createError("Вы не отправили идентификатор или секретный код"));
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return next(createError("Не удалось найти пользователя в бд"));
+    }
+
+    if (!user.emailSecret || user.emailConfirmed) {
+      return next(createError("Данный пользователь не ожидает подтверждения"));
+    }
+
+    const isVerified = await verifySomethingWithHashed(secret, user.emailSecret);
+
+    if (!isVerified) {
+      return next(createError("Неверный код подтверждения"));
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        emailConfirmed: true,
+        emailSecret: null
+      },
+      {
+        new: true
+      }
+    );
+
+    return res.json(updatedUser);
+  } catch (error) {
+    return next(createError("Не удалось подтвердить E-mail"));
+  }
+});
+
+router.get("/cancel", async (req, res, next) => {
+  const { email } = req.query;
+
+  try {
+    if (!email) {
+      return next(createError("Вы не указали E-mail адрес, который собираетесь отвязать"));
+    }
+
+    const user = await User.findOne({
+      email
+    });
+
+    if (!user) {
+      return res.json(true);
+    }
+
+    if (user.emailConfirmed) {
+      return next(createError("Вы не можете отменить привязку E-mail'а от этого аккаунта"));
+    }
+
+    await User.remove({
+      email
+    });
+
+    return res.json(true);
+  } catch (error) {
+    return next(createError("Не удалось отменить привязку"));
   }
 });
 

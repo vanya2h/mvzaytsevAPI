@@ -9,6 +9,7 @@
       "@consts/*": ["./consts/*"],
       "@middlewares/*": ["./middlewares/*"],
       "@utils/*": ["./utils/*"],
+      "@email/*": ["./email/*"],
       "@models/*": ["./models/*"],
       "@root/*": ["./*"]
     }

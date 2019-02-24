@@ -4,10 +4,21 @@ const { Schema } = mongoose;
 
 const UserSchema = new Schema(
   {
-    login: {
+    email: {
       type: String,
-      isRequired: true,
-      unique: true
+      isRequired: true
+    },
+    emailSecret: {
+      type: String,
+      default: null
+    },
+    emailSendedAt: {
+      type: Date,
+      default: null
+    },
+    emailConfirmed: {
+      type: Boolean,
+      default: false
     },
     name: {
       type: String,
@@ -21,6 +32,10 @@ const UserSchema = new Schema(
       type: String,
       isRequired: true,
       select: false
+    },
+    bio: {
+      type: String,
+      isRequired: false
     }
   },
   {
