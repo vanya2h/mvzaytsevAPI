@@ -3,19 +3,17 @@ import * as models from "@consts/_models";
 
 const { Schema } = mongoose;
 
-const AttachmentSchema = new Schema(
+const CommentSchema = new Schema(
   {
-    key: {
+    content: {
       type: String,
       isRequired: true
     },
-    size: {
-      type: Number,
-      required: true
-    },
-    contentType: {
-      type: String,
-      required: true
+    post: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: models.MODEL_POST,
+      required: true,
+      autopopulate: true
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
@@ -32,8 +30,8 @@ const AttachmentSchema = new Schema(
   }
 );
 
-AttachmentSchema.plugin(require("mongoose-autopopulate"));
+CommentSchema.plugin(require("mongoose-autopopulate"));
 
-export const Attachment = mongoose.model(models.MODEL_ATTACHMENT, AttachmentSchema);
+export const Comment = mongoose.model(models.MODEL_COMMENT, CommentSchema);
 
-export default Attachment;
+export default Comment;

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import * as models from "@consts/_models";
 
 const { Schema } = mongoose;
 
@@ -48,6 +49,6 @@ const UserSchema = new Schema(
 
 UserSchema.plugin(require("mongoose-autopopulate"));
 
-export const User = mongoose.model("User", UserSchema);
+export const User = mongoose.model(models.MODEL_USER, UserSchema);
 
 export default User;
