@@ -16,6 +16,26 @@ import { sendConfirmationEmail } from "./utils/sendConfirmationEmail";
 
 const router = express.Router();
 
+router.get("/entry", async (req, res, next) => {
+  try {
+    const userId = req.query.userId;
+
+    if (!userId) {
+      return next(createError("Не указан идентификатор пользователя"));
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return next(createError("Не удалось найти пользователя"));
+    }
+
+    return res.json(user);
+  } catch (error) {
+    return next(createError("Не удалось найти пользователя"));
+  }
+});
+
 router.post(
   "/signin",
   [checkSchema(signinValidation), handleValidation],

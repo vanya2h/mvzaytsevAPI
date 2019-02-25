@@ -3,6 +3,7 @@ import { auth } from "@middlewares/auth";
 import { handleValidation } from "@middlewares/handleValidation";
 import { checkSchema } from "express-validator/check";
 import { Post } from "@models/Post";
+import { resolveEntityId } from "@utils/resolveEntityId";
 import { createValidation } from "./createValidation";
 import { createError } from "@utils/createError";
 
@@ -39,6 +40,47 @@ router.post("/entry", [auth(), checkSchema(createValidation), handleValidation],
     .then(createdPost => res.json(createdPost))
     .catch(error => next(createError("Не удалось загрузить посты", error)))
 );
+
+router.get("/like", auth(), async (req, res, next) => {
+  try {
+    const postId = req.query.postId;
+
+    if (!postId) {
+      return next(createError("Не указан идентификатор поста"));
+    }
+
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return next(createError("Пост не найден в бд"));
+    }
+
+    const action = post.likes.indexOf(req.userId) === -1 ? "$addToSet" : "$pull";
+
+    const updatedPost = await Post.findByIdAndUpdate(
+      postId,
+      {
+        [action]: {
+          likes: req.userId
+        }
+      },
+      { new: true }
+    );
+
+    return res.json(updatedPost);
+  } catch (error) {
+    return next(createError("Не удалось поставить лайк"));
+  }
+});
+
+router.get("/latest", async (req, res, next) => {
+  try {
+    const latest = await Post.findOne();
+    return res.json(resolveEntityId(latest));
+  } catch (error) {
+    return next(createError("Не удалось получить последний пост"));
+  }
+});
 
 export const post = router;
 

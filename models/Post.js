@@ -23,6 +23,14 @@ const PostSchema = new Schema(
       required: true,
       autopopulate: true
     },
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: models.MODEL_USER,
+        unique: true,
+        default: []
+      }
+    ],
     image: {
       type: mongoose.Schema.Types.ObjectId,
       ref: models.MODEL_ATTACHMENT,
