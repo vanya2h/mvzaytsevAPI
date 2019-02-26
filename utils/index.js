@@ -6,3 +6,4 @@ export { resolveEntityId } from "./resolveEntityId";
 export { hashWithSecret } from "./hashWithSecret";
 export { sendemail } from "./sendemail";
 export { makeSecret } from "./makeSecret";
+export { isISOString } from "./isISOString";

@@ -20,6 +20,10 @@ const CommentSchema = new Schema(
       ref: models.MODEL_USER,
       required: true,
       autopopulate: true
+    },
+    fakeCreated: {
+      type: Date,
+      default: null
     }
   },
   {

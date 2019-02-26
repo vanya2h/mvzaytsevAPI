@@ -4,9 +4,11 @@ import { handleValidation } from "@middlewares/handleValidation";
 import { checkSchema } from "express-validator/check";
 import { createComment } from "@transactions/comment/createComment";
 import { Comment } from "@models/Comment";
-import { createValidation } from "./createValidation";
 import { createError } from "@utils/createError";
+import { createValidation } from "./createValidation";
+import { updateValidation } from "./updateValidation";
 import { parseQuery } from "./middlewares/parseQuery";
+import { parseComment } from "./middlewares/parseComment";
 import { parsePost } from "./middlewares/parsePost";
 
 const router = express.Router();
@@ -55,6 +57,21 @@ router.post(
       return res.json(comment);
     } catch (reason) {
       return next(createError("Не удалось создать пост", reason));
+    }
+  }
+);
+
+router.put(
+  "/entry",
+  [auth(), checkSchema(updateValidation), handleValidation, parseComment],
+  async (req, res, next) => {
+    try {
+      const updatedComment = await Comment.findByIdAndUpdate(req.commentId, req.matchedData, {
+        new: true
+      });
+      return res.json(updatedComment);
+    } catch (reason) {
+      return next(createError("Не удалось обновить комментарий", reason));
     }
   }
 );
