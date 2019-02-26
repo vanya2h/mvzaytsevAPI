@@ -25,6 +25,13 @@ const UserSchema = new Schema(
       type: String,
       isRequired: true
     },
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: models.MODEL_COMMENT,
+        default: []
+      }
+    ],
     isAdmin: {
       type: Boolean,
       default: false

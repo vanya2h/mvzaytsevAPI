@@ -2,6 +2,7 @@ import express from "express";
 import { auth } from "@middlewares/auth";
 import { handleValidation } from "@middlewares/handleValidation";
 import { checkSchema } from "express-validator/check";
+import { createComment } from "@transactions/comment/createComment";
 import { Comment } from "@models/Comment";
 import { createValidation } from "./createValidation";
 import { createError } from "@utils/createError";
@@ -20,7 +21,7 @@ router.get("/entry", async (req, res, next) => {
 
     const comment = await Comment.findById(commentId);
 
-    if (!comment) { 
+    if (!comment) {
       return next(createError("Комментарий не найден в бд."));
     }
 
@@ -50,14 +51,7 @@ router.post(
   [auth(), checkSchema(createValidation), handleValidation, parsePost],
   async (req, res, next) => {
     try {
-      const commentData = {
-        ...req.matchedData,
-        owner: req.userId,
-        post: req.postId
-      };
-
-      const comment = await Comment.create(commentData);
-
+      const comment = await createComment(req.matchedData, req.userId, req.postId);
       return res.json(comment);
     } catch (reason) {
       return next(createError("Не удалось создать пост", reason));

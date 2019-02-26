@@ -1,0 +1,16 @@
+export const key = {
+  type: "service_account",
+  project_id: "mvzaytsev",
+  private_key_id: "bd7a8b893f68022ebe4c8539355c69611d70686d",
+  private_key:
+    "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCtMuzDGrLUlXM9\nFTf1c+uINbAcwh5GKG/Mp12fpKz4bm/kuA/tPAZFpKhLIZNxhVFNfpBQcJr3bzG2\nkClS+ZrsPZGajdZQuQpFf5R90foKg1472BUuXu+3fYZbSJHDnc5/M2JCviBsz5GZ\nnjO2NF7MtzBYyys1pE3G32HxafR8+0JUq41QoYfqW6YNRd6B7cbYzOqoT6g0TZkU\nVQF2aqngxALXSwYVDIuwwBKYfg41EZmVXmXGIyNBaqFmuhgwzIs3jKp2S4Agrwyi\nbNzwYS+R4L+p8S8NxSJ3X4ea95ZaGb8xwdFFnoPkGdwFoXCQdTfqPLzeRXv4zzmZ\nbTX6novVAgMBAAECggEAIUUP/+ZoBbfzm/8wcaDj1JVjkBKl2Bo6Z5iavmjWpR4p\ntki5HnwSRFx9y3jWps7SME2okRsgWXltlkEY/wxdexXUm1i1m2oAFBuOvaCRJGXZ\nuysl3nN0Hs4o+e31uhrdKMgJDwMQnXY95MFj85MZxr9FtTjJwxMdsZ8FZGdTBJK5\negkPdZbP7gsCorwqdxce518tsKusuTCVHOjZ4roZFpUARbumIhCL6/c3ByzwPkd8\nK6vXdxz1NxZikbBaeL0ss5rC4gM8WlRogIYNHoyafr7POF8eOrroLsth31CrkhTb\ndZndZEwgzNEQDkBykwC0FOjKjB/yjAtjY9F11/yMwQKBgQD0uOisse2YhOsskJJj\nqHIUG/4RzS2X0Pe0dOiBmNvxK2B1PA6DDNeJrL5wKSmD+kZJn181IltuabRGQBei\nUwDsErUyYetKPDcDBklps15fiF5Siwl9YhTjb4I1iF8cOslefEtZaiaG6GmWd0Nn\nntmsj0yD7xYnH6Ed5tjIDCnLpQKBgQC1LjmQYmITSnSrjr4SCWGMFzJDwuLVdZcf\nTNffoe9bs6iYGtIzuwVnRkvg5Y9SDzN1zTRDGuUqW+EGvOnVcKSmgn8KqRCCZwFn\nw2o0ID4HI3N10g0o28IU+8tUqU8mjLVuyrTbVXgrVAcLboMcDLqnz+OGIOT45IdK\nI5Xrt0yIcQKBgFSxfczukxTaw20b553X2Qs+mNJeWO4WovNwFltrpIq1gV9xVnBi\nTGHYR9wXUsfbIOIv5spDxrLSoFJDsio6YbJR0yXJn52Ec2F3loafTgTv8/zLI5Ci\nFiqUF9MhDBGAAtrRV15tj0HXQ1uQkOJWpmzC9y8d2mPV3XO0xceN9hUFAoGBALJR\nuoomqox9/XJUXTH3VbDBq9ERYJvizkgaI2WRRbmli0uZKkWLzneksk244mRLXcSV\noNhjAiW8pC8zg5l08jiHu23Mk9kkdDeiF0cSbLot5BeUEyuhjtWENM0wjhxM5M0U\naQhuiIVsgDp6HERhKty7OR3sBjAJDDal64pBr+uhAoGBAIP5GvHGpUpEkBQatMlg\nmJvRA5znWiZSpz3h2IFR45S3HcIzu9az1pa8XVuaNzCkf9u4tr9tAnVC0CaHOEKQ\nfHlbanG97Oz5Ajnq4FGTi3ne2XJPb9MOr833OMWtfdyN/nJ4stGMOm9/bWs3xw9f\nbYW65zeC5ZnmEbwneUVCGRn3\n-----END PRIVATE KEY-----\n",
+  client_email: "beatzhitta@mvzaytsev.iam.gserviceaccount.com",
+  client_id: "106244924974608910060",
+  auth_uri: "https://accounts.google.com/o/oauth2/auth",
+  token_uri: "https://oauth2.googleapis.com/token",
+  auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+  client_x509_cert_url:
+    "https://www.googleapis.com/robot/v1/metadata/x509/beatzhitta%40mvzaytsev.iam.gserviceaccount.com"
+};
+
+export default key;

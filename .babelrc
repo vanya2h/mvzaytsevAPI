@@ -13,6 +13,7 @@
           "@routes": "./routes",
           "@middlewares": "./middlewares",
           "@models": "./models",
+          "@transactions": "./transactions",
           "@email": "./email",
           "@root": "./"
         },

@@ -12,9 +12,22 @@ import { verifySomethingWithHashed } from "@utils/index";
 import { signinValidation } from "./validations/signinValidation";
 import { signupValidation } from "./validations/signupValidation";
 import { mayUserResend } from "./middlewares/mayUserResend";
+import { createFindOptions } from "./middlewares/createFindOptions";
 import { sendConfirmationEmail } from "./utils/sendConfirmationEmail";
 
 const router = express.Router();
+
+router.get("/entries", createFindOptions, async (req, res, next) => {
+  try {
+    const users = await User.find({}, null, req.findOptions);
+
+    return res.json(users);
+  } catch (error) {
+    return next(
+      createError("Не удалось получит список пользователей. Обратитесь в тех. поддержку")
+    );
+  }
+});
 
 router.get("/entry", async (req, res, next) => {
   try {

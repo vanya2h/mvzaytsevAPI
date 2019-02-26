@@ -8,6 +8,7 @@
       "@routes/*": ["./routes/*"],
       "@consts/*": ["./consts/*"],
       "@middlewares/*": ["./middlewares/*"],
+      "@transactions/*": ["./transactions/*"],
       "@utils/*": ["./utils/*"],
       "@email/*": ["./email/*"],
       "@models/*": ["./models/*"],
