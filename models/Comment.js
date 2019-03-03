@@ -23,7 +23,7 @@ const CommentSchema = new Schema(
     },
     fakeCreated: {
       type: Date,
-      default: null
+      default: new Date()
     }
   },
   {

@@ -39,7 +39,7 @@ router.get("/entries", parseQuery, async (req, res, next) => {
       skip: +req.query.skip || 0,
       limit: +req.query.limit || 10,
       sort: {
-        createdAt: -1
+        fakeCreated: 1
       }
     });
     return res.json(comments);
