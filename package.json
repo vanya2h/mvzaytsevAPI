@@ -12,7 +12,7 @@
   "dependencies": {
     "@google-cloud/storage": "^2.4.1",
     "@sendgrid/mail": "^6.3.1",
-    "aws-sdk": "^2.409.0",
+    "aws-sdk": "^2.814.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.6",
     "babel-plugin-module-resolver": "^3.1.1",
